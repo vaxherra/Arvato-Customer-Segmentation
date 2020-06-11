@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import pandas as pd
 
-def unknown_to_nan(df, xlsx, missing_keyword = 'unknown' ):
+def unknown_to_nan(df, xlsx, missing_keyword = 'unknown', rename_columns = None ):
     """
     A helper function to convert missing entries to NaNs. 
     
@@ -21,10 +21,26 @@ def unknown_to_nan(df, xlsx, missing_keyword = 'unknown' ):
     """
     # Load mapping in xlsx format
     xlsx = pd.read_excel(xlsx, header = 1)
+    #extra column called Unnamed that seems like an index duplication, I will drop it
     xlsx.drop(columns=['Unnamed: 0'], inplace=True)
     xlsx['Attribute'] = xlsx['Attribute'].ffill()
     xlsx['Description'] = xlsx['Description'].ffill()
     
+    if(rename_columns is not None):
+        print("Renaming columns according to provided file: {}".format(rename_columns))
+    
+        corrected_features = pd.read_csv(rename_columns,sep="\t").dropna()
+
+        try:
+            matching_columns =  sum([ 1 for column in  list(corrected_features.columns  ) if column in ['data','metadata'] ])
+            assert( matching_columns==2)
+        except:
+            raise Exception("Provided metadata correction file {} lacks 2 requited columns: 'data', 'metadata'")
+
+        corrected_features_dict = dict(zip(corrected_features['data'], corrected_features['metadata']))
+        #rename columns
+        df.rename(columns=corrected_features_dict, inplace=True)
+
     
     # First, obtain table with unknown feature values: a subset of provided xlsx file containing 'missing_keyword' keyword in the 'Meaning' field
     
