@@ -89,6 +89,6 @@ def unknown_to_nan(df, xlsx, missing_keyword = 'unknown', rename_columns = None 
         # Loop over missing_values, match and replace target dataset
         for missing_value in missing_values:
             # match column name (feature), and replace a given missing value with NAN
-            df[attribute].replace(missing_values, np.nan, inplace=True)
+            df[attribute].replace(to_replace=missing_values, value=np.nan, inplace=True)
 
     return df,list(set(missing_metadata_annotations)), list(set(not_present_features))
