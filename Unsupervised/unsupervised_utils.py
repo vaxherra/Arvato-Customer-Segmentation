@@ -131,13 +131,18 @@ def variance_explained(pca,variance_threshold=80):
 
 
 ####################################
-def pca_explainer(pca, pca_comonents, features_list, pca_num, n_weights=10, alpha=0.25,size=1,plot_arrows=False,width=20,height=8):
+def pca_explainer(pca, pca_comonents, pca_num, n_weights=10, alpha=0.25,size=1,plot_arrows=False,width=20,height=8):
     """
     TODO: document
     
     """
-
+    features_list = pca.columns
+    pca = pca.to_numpy()
+    
     fig,axs = plt.subplots(1,2,figsize=(width,height))
+    
+    # if a reduced PCA dataframe object was passed, but pca component still hold full number of features
+    pca_comonents = pca_comonents[:,:pca.shape[1]]
     
     
     assert pca_num>=1
