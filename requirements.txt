@@ -1,7 +1,6 @@
-prince
 scikit-learn=0.23.1
 pandas
 matplotlib
 seaborn
-tqdm
 xlrd
+pickle
