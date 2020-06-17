@@ -4,6 +4,82 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+
+from sklearn.cluster import KMeans
+from sklearn import metrics
+
+
+
+#https://github.com/scikit-learn/scikit-learn/issues/1091
+import random as rng
+from sklearn.base import clone
+from sklearn.utils import check_random_state
+from sklearn.metrics import adjusted_rand_score
+
+def cluster_stability(X, est, n_iter=20, percent=1,random_state=None):
+    labels = []
+    indices = []
+    for i in range(n_iter):
+        print("Iteration {}/{}".format(i+1,n_iter))
+        # draw bootstrap samples, store indices
+        sample_indices = np.random.randint(0, X.shape[0],int(X.shape[0]*percent )  )
+        indices.append(sample_indices)
+        est = clone(est)
+        if hasattr(est, "random_state"):
+            # randomize estimator if possible
+            est.random_state = np.random.randint(1e5)
+        X_bootstrap = X[sample_indices]
+        est.fit(X_bootstrap)
+        # store clustering outcome using original indices
+        relabel = -np.ones(X.shape[0], dtype=np.int)
+        relabel[sample_indices] = est.labels_
+        labels.append(relabel)
+    scores = []
+    for l, i in zip(labels, indices):
+        for k, j in zip(labels, indices):
+            # we also compute the diagonal which is a bit silly
+            in_both = np.intersect1d(i, j)
+            scores.append(adjusted_rand_score(l[in_both], k[in_both]))
+    return np.mean(scores)
+
+
+
+
+
+
+def elbow_kmeans(X, clusters=10):
+ 
+    sum_of_squared_distances = []
+    silhouette_scores = []
+    calinski_harabasz_scores = []
+
+    for k in range(2,clusters+1):
+        print("{}/{}".format(k,clusters))
+
+        k_means = KMeans(n_clusters=k)
+        k_means.fit(X)
+
+        print("\t ...Fitted")
+        labels = k_means.labels_
+
+
+        # different metrics
+
+        # Sil score takes too much time to compute
+        #sil_score = metrics.silhouette_score(X, labels, metric = 'euclidean')
+        #silhouette_scores.append(sil_score)
+        #print("...Computed Silhouette score")
+
+        CH_score = metrics.calinski_harabasz_score(X, labels)
+        calinski_harabasz_scores.append(CH_score)
+        print("\t Computed calinski harabasz score")
+
+        sum_of_squared_distances.append(k_means.inertia_)
+        print("\t Computed sum of squares distance score")
+        
+    return sum_of_squared_distances,calinski_harabasz_scores
+
+
 def remove_correlated(dataset, threshold,corr_matrix=None):
     feature_correlated = {}
 
