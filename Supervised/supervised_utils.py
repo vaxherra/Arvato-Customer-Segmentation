@@ -3,11 +3,11 @@ def delete_endpoint(predictor):
     """
     Deletes an endpoint through provided predictor.
     """
-        try:
-            boto3.client('sagemaker').delete_endpoint(EndpointName=predictor.endpoint)
-            print('Deleted {}'.format(predictor.endpoint))
-        except:
-            print('Already deleted: {}'.format(predictor.endpoint))
+    try:
+        boto3.client('sagemaker').delete_endpoint(EndpointName=predictor.endpoint)
+        print('Deleted {}'.format(predictor.endpoint))
+    except:
+        print('Already deleted: {}'.format(predictor.endpoint))
 
             
             
