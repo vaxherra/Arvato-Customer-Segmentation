@@ -41,28 +41,4 @@ Analysis is split into multiple folders corresponding to various steps, also des
 contains the final .csv files for the submissions to the Kaggle competition.
 
 
-# Overview
 
-This repository contains the code, analysis, and report for Arvato Customer Segmentation project. TR
-
-
-## Project Overview
-
-[TODO]: remove instruction below
-Student provides a high-level overview of the project in layman’s terms. Background information such as the problem domain, the project origin, and related data sets or input data is given.
-
----
-
-## Problem Statement
-
-
-
-[TODO]: remove instruction below
-The problem which needs to be solved is clearly defined. A strategy for solving the problem, including discussion of the expected solution, has been made.
-
----
-
-## Metrics
-
-[TODO]: remove instruction below
-Metrics used to measure the performance of a model or result are clearly defined. Metrics are justified based on the characteristics of the problem.
